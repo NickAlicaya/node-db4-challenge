@@ -32,15 +32,16 @@ exports.up = function(knex) {
         .unsigned()
         .references('id')
         .inTable('ingredients')
-      tbl.float('quantity')
+      tbl.float('quantity_in_mg')
+    
   })
 };
 
 exports.down = function(knex) {
   return (knex.schema
-    .dropTableIfExists('ingredients')
     .dropTableIfExists('recipe_ingredients')
+    .dropTableIfExists('ingredients')
     .dropTableIfExists('steps')
-    .dropTableIfExists('recipes')
+        .dropTableIfExists('recipes')
     )
 };
