@@ -49,6 +49,67 @@ router.get('/:id/instructions', (req, res)=>{
 })
 
 
-//- `GET /api/ingredients/:id/recipes`: all recipes in the system that utilize a single ingredient 
+router.get('/', (req,res) => {
+    Recipes.find()
+    .then(recipes => {
+        res.json(recipes)
+    })
+    .catch(err => {
+        console.log(err, "error in getting recipes");
+        res.status(500).json({error: "Error cannot get recipes."})
+    })
+})
+
+
+//Gets api/recipe/:id   gets recipe with specified recipe id
+router.get('/:id', (req, res) => {
+    const { id } = req.params;
+    Recipes.findById(id)
+    .then(recipe => {
+    if (recipe) {
+        res.json(recipe);
+    } else {
+        res.status(404).json({ message: 'Could not find recipe with given id.' })
+    }
+    })
+    .catch(err => {
+    res.status(500).json({ message: 'Failed to get recipe' });
+});
+});
+
+//Post a new recipe
+
+router.post('/', (req, res) => {
+    const Data = req.body;
+  
+    Recipes.add(Data)
+    .then(Data => {
+      res.status(201).json(Data);
+    })
+    .catch (err => {
+      res.status(500).json({ message: 'Failed to create new recipe' });
+    });
+  });
+
+
+  //Delete recipe /api/recipes/id
+
+  router.delete('/:id', (req, res) => {
+    const { id } = req.params;
+  
+    Recipes.remove(id)
+    .then(deleted => {
+      if (deleted) {
+        res.json({ removed: deleted });
+      } else {
+        res.status(404).json({ message: 'Could not find recipe with given id' });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'Failed to delete recipe' });
+    });
+  });
+
+
 
 module.exports = router;

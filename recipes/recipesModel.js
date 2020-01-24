@@ -3,8 +3,11 @@ const db = require('../data/dbConfig.js')
 module.exports = {
     getRecipes,
     getShoppingList,
-    getInstructions
-
+    getInstructions,
+    find,
+    findById,
+    add,
+    remove
 }
 
 function getRecipes() {
@@ -42,6 +45,33 @@ function getInstructions(recipe_id) {
 // join steps on recipes.id = steps.recipe_id
 // where recipes.id=1
 
+function find() {
+    return db('recipes')
+}
 
-///-----------------------------------------------
+function findById(id) {
+    return db('recipes')
+      .where('id', id)
+      .first()
+      .then(recipe => {
+        if (recipe) {
+          return recipe;
+        } else {
+          return null;
+        }
+      });
+  }
 
+  function add(recipe) {
+    return db('recipes')
+      .insert(recipe)
+      .then(ids => {
+        return findById(ids[0]);
+      });
+  }
+
+  function remove(id) {
+    return db('recipes')
+      .where('id', id)
+      .del();
+  }
